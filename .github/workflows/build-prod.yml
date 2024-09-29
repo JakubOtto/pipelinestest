@@ -18,7 +18,7 @@ jobs:
           node-version: '20'
 
       - name: Install Dependencies
-        run: npm ci --only=prod
+        run: npm install
 
       - name: Build Production
         run: npm run build --prod
