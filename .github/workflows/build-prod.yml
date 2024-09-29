@@ -2,8 +2,7 @@ name: Build Production
 
 on:
   push:
-    tags:
-      - 'production'
+    
 
 jobs:
   build:
