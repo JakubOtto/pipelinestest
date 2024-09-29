@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - develop # Pipeline odpali się na pushu do brancha "develop"
+  pull_request:
+    branches:
+      - develop
 
 jobs:
   build-prod:
@@ -17,9 +20,12 @@ jobs:
         with:
           node-version: '18'
       - name: Install dependencies
-        run: npm ci --production
+        run: npm install
+      - name: Install dependencies
+        run: npm ci --production --omit=dev
       - name: Build project
         run: npm run build --if-present
+      
 
   unit-tests:
     name: Run Unit Tests
@@ -30,7 +36,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '18'
       - name: Install dependencies
         run: npm ci
       - name: Run unit tests
@@ -45,7 +51,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '18'
       - name: Install dependencies
         run: npm ci
       - name: Run e2e tests
