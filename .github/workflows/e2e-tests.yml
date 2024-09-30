@@ -23,6 +23,13 @@ jobs:
           --health-interval 10s 
           --health-timeout 10s 
           --health-retries 5
+        env:
+            MONGODB_HOST: localhost
+            MONGODB_PORT: 27017
+            MONGODB_DATABASE: dev
+            MONGODB_USER: root
+            MONGODB_PASSWORD: dev
+            MONGO_URI: mongodb://root:dev@localhost:27017/dev
 
     steps:
     - name: Checkout code
@@ -39,13 +46,15 @@ jobs:
     - name: Check MongoDB logs
       run: docker logs $(docker ps -aqf "name=mongo")
 
-    - name: Wait for MongoDB
-      run: sleep 30  
+    - name: Wait for MongoDB to be ready
+      run: |
+        until docker exec mongodb-container mongo --eval "db.adminCommand('ping')"; do
+          echo "Waiting for MongoDB to initialize..."
+          sleep 20
+        done
 
     - name: Check MongoDB logs
       run: docker logs <nazwa_kontenera_mongo>
 
     - name: Run e2e tests
-      env:
-        MONGO_URI: mongodb://root:dev@localhost:27017/dev
       run: npm run test:e2e
