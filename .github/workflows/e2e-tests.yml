@@ -21,7 +21,7 @@ jobs:
         options: >-
           --health-cmd "mongo --eval 'db.runCommand({ping:1})'" 
           --health-interval 10s 
-          --health-timeout 5s 
+          --health-timeout 10s 
           --health-retries 5
 
     steps:
@@ -36,6 +36,9 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Check MongoDB logs
+      run: docker logs $(docker ps -aqf "name=mongo")
+
     - name: Wait for MongoDB
       run: sleep 30  
 
@@ -44,5 +47,5 @@ jobs:
 
     - name: Run e2e tests
       env:
-        MONGO_URI: mongodb://localhost:27017/dev
+        MONGO_URI: mongodb://root:dev@localhost:27017/dev
       run: npm run test:e2e
