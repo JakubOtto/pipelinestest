@@ -1,28 +1,17 @@
-name: E2E Tests
+name: Unit Tests
 
 on:
   push:
     branches:
-      - '**'
+      - '**'  # zabezpieczyć żeby na developie się nie odpalalo
       - '!develop'
   pull_request:
     branches:
       - '**'  
 
 jobs:
-  test-e2e:
+  test:
     runs-on: ubuntu-latest
-
-    services:
-      mongo:
-        image: mongo:5.0  # Użyj konkretnej wersji MongoDB
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd "mongo --eval 'db.runCommand({ping:1})'" 
-          --health-interval 10s 
-          --health-timeout 5s 
-          --health-retries 5
 
     steps:
     - name: Checkout code
@@ -36,13 +25,5 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Wait for MongoDB
-      run: sleep 30  
-
-    - name: Run e2e tests
-      env:
-        MONGO_URI: mongodb://localhost:27017/test-db
-      run: npm run test:e2e
-
-    - name: Check MongoDB logs  # Debugowanie
-      run: docker logs <nazwa_kontenera_mongo>  # Uzupełnij nazwę kontenera
+    - name: Run unit tests
+      run: npm run test
