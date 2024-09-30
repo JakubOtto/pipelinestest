@@ -14,18 +14,10 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-        mongo:
-            image: mongo:latest
-            ports:
-                - 27017:27017
-            options: >-
-                --health-cmd "mongo --eval 'db.runCommand({ping:1})'"
-                --health-interval 10s 
-                --health-timeout 20s 
-                --health-retries 10
-            env:
-                MONGO_INITDB_ROOT_USERNAME: root
-                MONGO_INITDB_ROOT_PASSWORD: dev
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
         
 
     steps:
@@ -40,22 +32,12 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Check MongoDB logs
-      run: docker logs $(docker ps -aqf "name=mongo")
-
-    - name: Wait for MongoDB to be ready
-      run: |
-        until docker exec mongo mongo --eval "db.adminCommand('ping')"; do
-          echo "Waiting for MongoDB to initialize..."
-          sleep 20
-        done
-    
     - name: Run e2e tests
       env:
-        MONGODB_HOST: localhost
-        MONGODB_PORT: 27017
-        MONGODB_DATABASE: dev
-        MONGODB_USER: root
-        MONGODB_PASSWORD: dev
-        MONGO_URI: mongodb://root:dev@localhost:27017/dev
+       MONGODB_HOST: localhost
+       MONGODB_PORT: 27017
+       MONGODB_DATABASE: dev
+       MONGODB_USER: root
+       MONGODB_PASSWORD: dev
+       MONGO_URI: mongodb://root:dev@localhost:27017/dev
       run: npm run test:e2e
