@@ -3,15 +3,30 @@ name: Unit Tests
 on:
   push:
     branches:
-      - '**'  # zabezpieczyć żeby na developie się nie odpalalo
+      - '**'  # Trigger on all branches except develop
       - '!develop'
   pull_request:
     branches:
-      - '**'  
+      - '**'
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongo --eval 'db.runCommand({ping: 1})'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: dev
+          MONGO_INITDB_DATABASE: dev
 
     steps:
     - name: Checkout code
@@ -25,5 +40,14 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Wait for MongoDB to be ready
+      run: |
+        while ! nc -z localhost 27017; do   
+          echo "Waiting for MongoDB..."
+          sleep 1 # wait for 1 second before checking again
+        done
+
     - name: Run unit tests
+      env:
+        MONGO_URI: mongodb://root:dev@localhost:27017/dev # Set your MongoDB connection string here
       run: npm run test
