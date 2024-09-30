@@ -23,13 +23,7 @@ jobs:
           --health-interval 10s 
           --health-timeout 10s 
           --health-retries 5
-        env:
-            MONGODB_HOST: localhost
-            MONGODB_PORT: 27017
-            MONGODB_DATABASE: dev
-            MONGODB_USER: root
-            MONGODB_PASSWORD: dev
-            MONGO_URI: mongodb://root:dev@localhost:27017/dev
+        
 
     steps:
     - name: Checkout code
@@ -41,7 +35,7 @@ jobs:
         node-version: '21'
 
     - name: Install dependencies
-      run: npm install
+      run: npm ci
 
     - name: Check MongoDB logs
       run: docker logs $(docker ps -aqf "name=mongo")
@@ -57,4 +51,11 @@ jobs:
       run: docker logs <nazwa_kontenera_mongo>
 
     - name: Run e2e tests
+      env:
+       MONGODB_HOST: localhost
+       MONGODB_PORT: 27017
+       MONGODB_DATABASE: dev
+       MONGODB_USER: root
+       MONGODB_PASSWORD: dev
+       MONGO_URI: mongodb://root:dev@localhost:27017/dev
       run: npm run test:e2e
