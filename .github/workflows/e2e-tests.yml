@@ -57,5 +57,5 @@ jobs:
        MONGODB_DATABASE: dev
        MONGODB_USER: root
        MONGODB_PASSWORD: dev
-       MONGO_URI: mongodb://localhost:4455/api/v1
+       MONGO_URI: mongodb://localhost:27017/dev
       run: npm run test:e2e
