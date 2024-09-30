@@ -37,7 +37,10 @@ jobs:
       run: npm install
 
     - name: Wait for MongoDB
-      run: sleep 15  
+      run: sleep 30  
+
+    - name: Check MongoDB logs
+      run: docker logs <nazwa_kontenera_mongo>
 
     - name: Run e2e tests
       env:
