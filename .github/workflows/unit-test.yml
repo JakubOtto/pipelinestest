@@ -19,7 +19,7 @@ jobs:
         ports:
           - 27017:27017
         options: >-
-          --health-cmd "mongo --eval 'db.runCommand({ping: 1})'"
+          --health-cmd "mongo 
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -40,14 +40,23 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Wait for MongoDB to be ready
+    - name: Install mongosh
       run: |
-        while ! nc -z localhost 27017; do   
-          echo "Waiting for MongoDB..."
-          sleep 1 # wait for 1 second before checking again
-        done
+        sudo apt-get install gnupg
+        wget -qO- https://www.mongodb.org/static/pgp/server-7.0.asc | sudo tee /etc/apt/trusted.gpg.d/server-7.0.asc
+        echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+        sudo apt-get update
+        sudo apt-get install -y mongodb-mongosh
+        mongosh --version
+
+    - name: Initalize MongoDB
+      run: |
+        mongosh --host localhost:27017 -u admin -p admin --authenticationDatabase admin <<EOF
+          db = db.getSiblingDB('APP-DB');
+          db.createUser({ user: 'APP-USERNAME', pwd: 'APP-PASSWORD', roles: [{ role: 'readWrite', db: 'APP-DB' }] })
+          db.createCollection('APP-COLLECTION');
+        EOF
+        # Do whatever you like in here
 
     - name: Run unit tests
-      env:
-        MONGO_URI: mongodb://root:dev@localhost:27017/dev # Set your MongoDB connection string here
       run: npm run test
