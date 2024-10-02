@@ -3,11 +3,11 @@ name: CI Pipeline - Tests Only
 on:
   push:
     branches:
-      - '**'  
-      - '!develop'  
+      - '**'
+      - '!develop'
   pull_request:
     branches:
-      - '**'  
+      - '**'
 
 jobs:
   test:
@@ -20,33 +20,33 @@ jobs:
           - 27017:27017
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Node.js for tests
-      uses: actions/setup-node@v3
-      with:
-        node-version: '21'
+      - name: Set up Node.js for tests
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21'
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Run unit tests
-      env:
-        MONGODB_HOST: localhost
-        MONGODB_PORT: 27017
-        MONGODB_DATABASE: dev
-        MONGODB_USER: root
-        MONGODB_PASSWORD: dev
-        MONGO_URI: mongodb://root:dev@localhost:27017/dev
-      run: npm run test
+      - name: Run unit tests
+        env:
+          MONGODB_HOST: localhost
+          MONGODB_PORT: 27017
+          MONGODB_DATABASE: dev
+          MONGODB_USER: root
+          MONGODB_PASSWORD: dev
+          MONGO_URI: mongodb://root:dev@localhost:27017/dev
+        run: npm run test
 
-    - name: Run e2e tests
-      env:
-        MONGODB_HOST: localhost
-        MONGODB_PORT: 27017
-        MONGODB_DATABASE: dev
-        MONGODB_USER: root
-        MONGODB_PASSWORD: dev
-        MONGO_URI: mongodb://root:dev@localhost:27017/dev
-      run: npm run test:e2e
+      - name: Run e2e tests
+        env:
+          MONGODB_HOST: localhost
+          MONGODB_PORT: 27017
+          MONGODB_DATABASE: dev
+          MONGODB_USER: root
+          MONGODB_PASSWORD: dev
+          MONGO_URI: mongodb://root:dev@localhost:27017/dev
+        run: npm run test:e2e
