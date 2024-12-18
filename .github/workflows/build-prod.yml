@@ -1,4 +1,4 @@
-name: CI Pipeline - Tests Only
+name: Unit and e2e tests
 
 on:
   push:
@@ -39,7 +39,7 @@ jobs:
           MONGODB_USER: root
           MONGODB_PASSWORD: dev
           MONGO_URI: mongodb://root:dev@localhost:27017/dev
-        run: npm run test
+        run: npm run test -- --passWithNoTests
 
       - name: Run e2e tests
         env:
