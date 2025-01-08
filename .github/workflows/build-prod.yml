@@ -1,17 +1,16 @@
 name: Unit and e2e tests
 
 on:
-  push:
-    branches:
-      - '**'
-      - '!develop'
-  pull_request:
-    branches:
-      - '**'
+  workflow_run:
+    workflows:
+      - Basic Tests
+    types:
+      - completed
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     services:
       mongodb:
