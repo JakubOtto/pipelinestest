@@ -2,10 +2,8 @@ name: Unit and e2e tests
 
 on:
   workflow_run:
-    workflows:
-      - Basic Tests
-    types:
-      - completed
+    workflows: ['Basic Tests']
+    types: [completed]
 
 jobs:
   test:
