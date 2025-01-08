@@ -33,20 +33,20 @@ jobs:
 
       - name: Run unit tests
         env:
-          MONGODB_HOST: localhost
-          MONGODB_PORT: 27017
-          MONGODB_DATABASE: dev
-          MONGODB_USER: root
-          MONGODB_PASSWORD: dev
-          MONGO_URI: mongodb://root:dev@localhost:27017/dev
+          MONGODB_HOST: ${{ secrets.MONGODB_HOST }}
+          MONGODB_PORT: ${{ secrets.MONGODB_PORT }}
+          MONGODB_DATABASE: ${{ secrets.MONGODB_DATABASE }}
+          MONGODB_USER: ${{ secrets.MONGODB_USER }}
+          MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+          MONGO_URI: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASSWORD }}@${{ secrets.MONGODB_HOST }}:${{ secrets.MONGODB_PORT }}/${{ secrets.MONGODB_DATABASE }}
         run: npm run test -- --passWithNoTests
 
       - name: Run e2e tests
         env:
-          MONGODB_HOST: localhost
-          MONGODB_PORT: 27017
-          MONGODB_DATABASE: dev
-          MONGODB_USER: root
-          MONGODB_PASSWORD: dev
-          MONGO_URI: mongodb://root:dev@localhost:27017/dev
+          MONGODB_HOST: ${{ secrets.MONGODB_HOST }}
+          MONGODB_PORT: ${{ secrets.MONGODB_PORT }}
+          MONGODB_DATABASE: ${{ secrets.MONGODB_DATABASE }}
+          MONGODB_USER: ${{ secrets.MONGODB_USER }}
+          MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+          MONGO_URI: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASSWORD }}@${{ secrets.MONGODB_HOST }}:${{ secrets.MONGODB_PORT }}/${{ secrets.MONGODB_DATABASE }}
         run: npm run test:e2e
