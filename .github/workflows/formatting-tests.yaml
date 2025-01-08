@@ -1,5 +1,9 @@
 name: Basic Tests
 
+permissions:
+  actions: write
+  contents: read
+
 on: [push]
 
 jobs:

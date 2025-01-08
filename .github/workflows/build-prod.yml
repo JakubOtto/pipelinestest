@@ -1,5 +1,9 @@
 name: Unit and e2e tests
 
+permissions:
+  actions: write
+  contents: read
+
 on:
   workflow_run:
     workflows: ['Basic Tests']
@@ -12,7 +16,7 @@ jobs:
 
     services:
       mongodb:
-        image: mongo:latest
+        image: mongo:latestd
         ports:
           - 27017:27017
 
