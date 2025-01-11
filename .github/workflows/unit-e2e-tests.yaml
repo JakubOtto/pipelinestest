@@ -10,7 +10,6 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Unit Tests
     runs-on: ubuntu-latest
-    
 
     services:
       mongodb:
