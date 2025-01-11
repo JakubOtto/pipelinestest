@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Checkout code
+      - name: Checkout codes
         uses: actions/checkout@v4
 
       - name: Set up Node.js
