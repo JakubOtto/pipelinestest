@@ -2,7 +2,7 @@ name: Unit and e2e tests
 
 on:
   workflow_run:
-    workflows: ['Basic Tests']
+    workflows: ['Build project']
     types: [completed]
 
 jobs:
