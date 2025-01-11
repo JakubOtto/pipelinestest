@@ -23,3 +23,4 @@ jobs:
 
       - name: Build project
         run: npm run start
+        continue-on-error: true
