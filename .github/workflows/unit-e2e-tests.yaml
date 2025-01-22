@@ -41,6 +41,15 @@ jobs:
           else
             echo "MONGO_URI is set"
           fi
+      - name: Print environment variables
+        run: |
+          echo "MONGODB_HOST: ${{ secrets.MONGODB_HOST }}"
+          echo "MONGODB_PORT: ${{ secrets.MONGODB_PORT }}"
+          echo "MONGODB_DATABASE: ${{ secrets.MONGODB_DATABASE }}"
+          echo "MONGODB_USER: ${{ secrets.MONGODB_USER }}"
+          echo "MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}"
+          echo "MONGO_URI: ${{ secrets.MONGO_URI }}"
+        
 
       - name: Run unit tests
         env:
