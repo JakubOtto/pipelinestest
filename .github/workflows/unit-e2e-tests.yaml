@@ -16,6 +16,11 @@ jobs:
         image: mongo:latest
         ports:
           - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 3
 
     steps:
       - name: Checkout code
@@ -29,6 +34,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check if MONGO_URI exists
+        run: |
+          if [ -z "${{ secrets.MONGO_URI }}" ]; then
+            echo "MONGO_URI is not set"
+          else
+            echo "MONGO_URI is set"
+          fi
+
       - name: Run unit tests
         env:
           MONGODB_HOST: ${{ secrets.MONGODB_HOST }}
@@ -36,7 +49,8 @@ jobs:
           MONGODB_DATABASE: ${{ secrets.MONGODB_DATABASE }}
           MONGODB_USER: ${{ secrets.MONGODB_USER }}
           MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
-          uri: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASSWORD }}@${{ secrets.MONGODB_HOST }}:${{ secrets.MONGODB_PORT }}/${{ secrets.MONGODB_DATABASE }}
+          MONGO_URI: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASSWORD }}@${{ secrets.MONGODB_HOST }}:${{ secrets.MONGODB_PORT }}/${{ secrets.MONGODB_DATABASE }}?authSource=admin
+
         run: npm run test -- --passWithNoTests
 
   e2e_tests:
@@ -49,6 +63,11 @@ jobs:
         image: mongo:latest
         ports:
           - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 3
 
     steps:
       - name: Checkout code
@@ -69,5 +88,5 @@ jobs:
           MONGODB_DATABASE: ${{ secrets.MONGODB_DATABASE }}
           MONGODB_USER: ${{ secrets.MONGODB_USER }}
           MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
-          uri: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASSWORD }}@${{ secrets.MONGODB_HOST }}:${{ secrets.MONGODB_PORT }}/${{ secrets.MONGODB_DATABASE }}
+          MONGO_URI: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASSWORD }}@${{ secrets.MONGODB_HOST }}:${{ secrets.MONGODB_PORT }}/${{ secrets.MONGODB_DATABASE }}?authSource=admin
         run: npm run test:e2e
