@@ -7,9 +7,9 @@ on:
 
 jobs:
   unit_tests:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Unit Tests
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     services:
       mongodb:
@@ -50,6 +50,7 @@ jobs:
           MONGODB_USER: ${{ secrets.MONGODB_USER }}
           MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
           MONGO_URI: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASSWORD }}@${{ secrets.MONGODB_HOST }}:${{ secrets.MONGODB_PORT }}/${{ secrets.MONGODB_DATABASE }}?authSource=admin
+
         run: npm run test -- --passWithNoTests
 
   e2e_tests:
