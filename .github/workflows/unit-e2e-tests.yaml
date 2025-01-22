@@ -49,7 +49,6 @@ jobs:
           echo "MONGODB_USER: ${{ secrets.MONGODB_USER }}"
           echo "MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}"
           echo "MONGO_URI: ${{ secrets.MONGO_URI }}"
-        
 
       - name: Run unit tests
         env:
