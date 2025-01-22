@@ -73,6 +73,10 @@ jobs:
     services:
       mongodb:
         image: mongo:latest
+        env:
+          MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGODB_USER }}
+          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+          MONGO_INITDB_DATABASE: ${{ secrets.MONGODB_DATABASE }}
         ports:
           - 27017:27017
         options: >-
