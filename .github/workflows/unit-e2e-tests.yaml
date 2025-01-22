@@ -1,4 +1,4 @@
-name: Unit and e2e tests
+name: Unit and E2E Tests
 
 on:
   workflow_run:
@@ -16,12 +16,17 @@ jobs:
         image: mongo:latest
         ports:
           - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 3
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js for testss
+      - name: Set up Node.js for tests
         uses: actions/setup-node@v3
         with:
           node-version: '21'
@@ -31,12 +36,7 @@ jobs:
 
       - name: Run unit tests
         env:
-          MONGODB_HOST: ${{ secrets.MONGODB_HOST }}
-          MONGODB_PORT: ${{ secrets.MONGODB_PORT }}
-          MONGODB_DATABASE: ${{ secrets.MONGODB_DATABASE }}
-          MONGODB_USER: ${{ secrets.MONGODB_USER }}
-          MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
-          MONGO_URI: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASSWORD }}@${{ secrets.MONGODB_HOST }}:${{ secrets.MONGODB_PORT }}/${{ secrets.MONGODB_DATABASE }}
+          MONGO_URI: mongodb://localhost:27017/testdb
         run: npm run test -- --passWithNoTests
 
   e2e_tests:
@@ -49,6 +49,11 @@ jobs:
         image: mongo:latest
         ports:
           - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 3
 
     steps:
       - name: Checkout code
@@ -64,10 +69,5 @@ jobs:
 
       - name: Run e2e tests
         env:
-          MONGODB_HOST: ${{ secrets.MONGODB_HOST }}
-          MONGODB_PORT: ${{ secrets.MONGODB_PORT }}
-          MONGODB_DATABASE: ${{ secrets.MONGODB_DATABASE }}
-          MONGODB_USER: ${{ secrets.MONGODB_USER }}
-          MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
-          MONGO_URI: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASSWORD }}@${{ secrets.MONGODB_HOST }}:${{ secrets.MONGODB_PORT }}/${{ secrets.MONGODB_DATABASE }}
+          MONGO_URI: mongodb://localhost:27017/testdb
         run: npm run test:e2e
