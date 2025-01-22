@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Check if MONGO_URI exists
+      - name: Check if MONGO_URI existsss
         run: |
           if [ -z "${{ secrets.MONGO_URI }}" ]; then
             echo "MONGO_URI is not set"
