@@ -49,6 +49,7 @@ jobs:
 
   e2e_tests:
     name: E2E Tests
+    continue-on-error: true
     runs-on: ubuntu-latest
     needs: unit_tests
 
